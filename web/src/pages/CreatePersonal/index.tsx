@@ -5,10 +5,8 @@ import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 import axios from 'axios';
 
-import api from '../../services/api';
-
 import './styles.css';
-
+import api from '../../services/api';
 import logo from '../../assets/logo2.png';
 
 interface Item {
@@ -32,15 +30,16 @@ const CreatePersonal = () => {
 
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
-    const [initialPosition, setInitionPosition] = useState<[number, number]>([0,0]);
-    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0,0]);
+    const [initialPosition, setInitionPosition] = useState<[number, number]>([0, 0]);
+    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const [formData, setFormData] = useState({
-        name: '',
+        nome: '',
         nascimento: '',
         sexo: '',
         cpf: '',
+        whatsapp: '',
         email: '',
     });
 
@@ -81,69 +80,96 @@ const CreatePersonal = () => {
     }, [selectedUf]);
 
     function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
-        const uf = event.target.value;
+        try {
+            const uf = event.target.value;
 
-        setSelectedUf(uf);
+            setSelectedUf(uf);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
-        const city = event.target.value;
+        try {
+            const city = event.target.value;
 
-        setSelectedCity(city);
+            setSelectedCity(city);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function handleMapClick(event: LeafletMouseEvent ){
-        setSelectedPosition([
-            event.latlng.lat,
-            event.latlng.lng
-        ])
+        try {
+            setSelectedPosition([
+                event.latlng.lat,
+                event.latlng.lng
+            ])
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
+        try {
+            const { name, value } = event.target;
 
-        setFormData({ ...formData, [name]: value });
+            setFormData({ ...formData, [name]: value });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function handleSelectItem(id: number) {
-        const alreadSelected = selectedItems.findIndex(item => item === id);
+        try {
+            const alreadSelected = selectedItems.findIndex(item => item === id);
 
-        if(alreadSelected >= 0) {
-            const filteredItems = selectedItems.filter(item => item !== id);
+            if(alreadSelected >= 0) {
+                const filteredItems = selectedItems.filter(item => item !== id);
 
-            setSelectedItems(filteredItems);
-        }else {
-            setSelectedItems([...selectedItems, id]);
+                setSelectedItems(filteredItems);
+            }else {
+                setSelectedItems([...selectedItems, id]);
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
     async function handleSubmit(event: FormEvent) {
-        event.preventDefault();
+        try {
+            event.preventDefault();
         
-        const { name, nascimento, sexo, cpf, email } = formData;
-        const uf = selectedUf;
-        const city = selectedCity;
-        const [latitude, longitude] = selectedPosition;
-        const items = selectedItems;
+            const { nome, nascimento, sexo, cpf, whatsapp,  email } = formData;
+            const uf = selectedUf;
+            const city = selectedCity;
+            const [latitude, longitude] = selectedPosition;
+            const items = selectedItems;
 
-        const data = {
-            name, 
-            nascimento,
-            sexo,
-            cpf,
-            email, 
-            uf,
-            city,
-            latitude,
-            longitude,
-            items
-        };
+            const data = {
+                nome, 
+                nascimento,
+                sexo,
+                cpf,
+                whatsapp,
+                email, 
+                uf,
+                city,
+                latitude,
+                longitude,
+                items
+            };
 
-        await api.post('personal', data);
+            console.log(data);
 
-        alert("Pesonal cadastrado com sucesso!");
+            await api.post('personal', data);
 
-        history.push('/');
+            alert("Pesonal cadastrado com sucesso!");
+
+            history.push('/');
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -166,11 +192,11 @@ const CreatePersonal = () => {
                     </legend>
                 
                     <div className="field">
-                        <label htmlFor="name">Nome</label>
+                        <label htmlFor="nome">Nome</label>
                         <input 
                             type="text"
-                            name="name"
-                            id="name"
+                            name="nome"
+                            id="nome"
                             onChange={handleInputChange}
                         />
                     </div>
@@ -196,15 +222,26 @@ const CreatePersonal = () => {
                             </select>
                         </div>
                     </div>
-                
-                    <div className="field">
-                        <label htmlFor="cpf">CPF</label>
-                        <input 
-                            type="text"
-                            name="cpf"
-                            id="cpf"
-                            onChange={handleInputChange}
-                        />
+
+                    <div className="field-group">
+                        <div className="field">
+                            <label htmlFor="cpf">CPF</label>
+                            <input 
+                                type="text"
+                                name="cpf"
+                                id="cpf"
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="whatsapp">WhatsApp</label>
+                            <input 
+                                type="text"
+                                name="whatsapp"
+                                id="whatsapp"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="field">

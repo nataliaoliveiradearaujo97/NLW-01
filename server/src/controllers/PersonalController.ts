@@ -67,6 +67,8 @@ class PersonalController {
                 email,
                 items
             } = request.body;
+
+            console.log(request.body);
     
             const trx = await knex.transaction();
     
