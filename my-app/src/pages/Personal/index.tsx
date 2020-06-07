@@ -18,7 +18,7 @@ interface Item {
 interface Pesonal {
     id: number;
     nome: string;
-    image: string;
+    image_url: string;
     latitude: number;
     longitude: number;
 }
@@ -134,7 +134,7 @@ const Personal = () => {
                                 }} 
                             >
                                 <View style={styles.mapMarkerContainer}>
-                                    <Image style={styles.mapMarkerImage} source={{ uri: personals.image }} />
+                                    <Image style={styles.mapMarkerImage} source={{ uri: personals.image_url }} />
                                     <Text style={styles.mapMarkerTitle}>{personals.nome}</Text>
                                 </View>
                             </Marker>

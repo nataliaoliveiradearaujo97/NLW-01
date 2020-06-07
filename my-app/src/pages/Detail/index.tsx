@@ -12,7 +12,7 @@ interface Params {
 
 interface Data {
   personal: {
-    image: string;
+    image_url: string;
     nome: string;
     email: string;
     whatsapp: number;
@@ -67,7 +67,7 @@ const Detail = () => {
                     <Icon name="arrow-left" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
 
-                <Image style={styles.personalImage} source={{ uri: data.personal.image }} />
+                <Image style={styles.personalImage} source={{ uri: data.personal.image_url }} />
 
                 <Text style={styles.personalName}>{data.personal.metodologia}</Text>
                 <Text style={styles.personalItems}>{data.items.map(item => item.nome).join(', ')}</Text>

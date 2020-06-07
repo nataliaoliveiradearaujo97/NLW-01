@@ -8,6 +8,7 @@ import axios from 'axios';
 import './styles.css';
 import api from '../../services/api';
 import logo from '../../assets/logo2.png';
+import Dropzone from '../../components/Dropzone/index';
 
 interface Item {
     id: number;
@@ -33,6 +34,7 @@ const CreatePersonal = () => {
     const [initialPosition, setInitionPosition] = useState<[number, number]>([0, 0]);
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    const [selectedFile, setselectedFile] = useState<File>();
 
     const [formData, setFormData] = useState({
         nome: '',
@@ -146,19 +148,22 @@ const CreatePersonal = () => {
             const [latitude, longitude] = selectedPosition;
             const items = selectedItems;
 
-            const data = {
-                nome, 
-                nascimento,
-                sexo,
-                cpf,
-                whatsapp,
-                email, 
-                uf,
-                city,
-                latitude,
-                longitude,
-                items
-            };
+            const data = new FormData();
+            data.append('nome', nome); 
+            data.append('nascimento', nascimento);
+            data.append('sexo', sexo);
+            data.append('cpf', cpf);
+            data.append('whatsapp', whatsapp);
+            data.append('email', email); 
+            data.append('uf', uf);
+            data.append('city', city);
+            data.append('latitude', String(latitude));
+            data.append('longitudedata', String(longitude));
+            data.append('items', items.join(','));
+
+            if (selectedFile) {
+                data.append('image', selectedFile);
+            }
 
             console.log(data);
 
@@ -185,6 +190,8 @@ const CreatePersonal = () => {
 
             <form onSubmit={handleSubmit}>
                 <h1>Cadastre-se</h1>
+
+                <Dropzone onFileUploaded={setselectedFile} />
 
                 <fieldset>
                     <legend>

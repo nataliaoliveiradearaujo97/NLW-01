@@ -19,7 +19,14 @@ class PersonalController {
                 .distinct()
                 .select('personal.*');
 
-            return response.json(personal);
+            const serializedPersonal = personal.map(personal => {
+                return {
+                    ...personal, 
+                    image_url: `http://192.168.0.16:3333/uploads/${personal.image}`
+                }
+            })
+
+            return response.json(serializedPersonal);
         } catch (error) {
             console.log(error);
         }
@@ -29,10 +36,15 @@ class PersonalController {
         try {
             const { id } = request.params;
 
-            const personals = await knex('personal').where('id', id).first();
+            const personal = await knex('personal').where('id', id).first();
 
-            if(!personals) {
+            if(!personal) {
                 return response.status(400).json({ message: 'Personal não encontrado' });
+            }
+
+            const serializedPersonal = {
+                ...personal, 
+                image_url: `http://192.168.0.16:3333/uploads/${personal.image}`
             }
 
             /**
@@ -45,7 +57,7 @@ class PersonalController {
                 .where('personal_items.id', id)
                 .select('items.nome');
 
-            return response.json({ personals, items });
+            return response.json({ serializedPersonal, items });
         } catch (error) {
             console.log(error);
         }
@@ -73,7 +85,7 @@ class PersonalController {
             const trx = await knex.transaction();
     
             const personal = {
-                image: 'https://sportsjob.com.br/wp-content/uploads/2018/06/707.jpg',
+                image: request.file.filename,
                 nome,
                 nascimento,
                 sexo,
@@ -91,11 +103,14 @@ class PersonalController {
     
             const personal_id = insertedIds[0];
     
-            const personalItems = await items.map((item_id: number) => {
-                return {
-                    item_id,
-                    personal_id
-                }
+            const personalItems = await items
+                .split(',')
+                .map((item:string) => item.trim())
+                .map((item_id: number) => {
+                    return {
+                        item_id,
+                        personal_id
+                    }
             })
     
             await trx('personal_items').insert(personalItems);
