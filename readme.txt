@@ -18,9 +18,3 @@ Executar:
 back: yarn dev 
 front: npm start 
 mobile: expo/yarn start
-
-Implementações: 
--cadastro de usuário 
--calculadora de imc 
--perfil de usuário/profissional no mobile (criar relacionamento entre ambos) 
--publicação de artigos
