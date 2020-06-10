@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import './styles.css';
@@ -31,6 +32,7 @@ const CreatePersonal = () => {
 
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
+    const [selectedSexo, setSelectedSexo] = useState('0');
     const [initialPosition, setInitionPosition] = useState<[number, number]>([0, 0]);
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -39,7 +41,6 @@ const CreatePersonal = () => {
     const [formData, setFormData] = useState({
         nome: '',
         nascimento: '',
-        sexo: '',
         cpf: '',
         whatsapp: '',
         email: '',
@@ -56,9 +57,15 @@ const CreatePersonal = () => {
     }, []);
 
     useEffect(() => {
-        api.get('items').then(response => {
+        async function loadItems() {
+            const response = await api.get('items');
+
             setItems(response.data);
-        });
+        }
+        // api.get('items').then(response => {
+        //     setItems(response.data);
+        // });
+        loadItems();
     }, []);
 
     useEffect(() => {
@@ -101,6 +108,16 @@ const CreatePersonal = () => {
         }
     }
 
+    function handleSelectedSexo(event: ChangeEvent<HTMLSelectElement>) {
+        try {
+            const sexo = event.target.value;
+
+            setSelectedSexo(sexo);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     function handleMapClick(event: LeafletMouseEvent ){
         try {
             setSelectedPosition([
@@ -138,11 +155,21 @@ const CreatePersonal = () => {
         }
     }
 
+    const toastOptions = {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    };
+
     async function handleSubmit(event: FormEvent) {
         try {
             event.preventDefault();
         
-            const { nome, nascimento, sexo, cpf, whatsapp,  email } = formData;
+            const { nome, nascimento, cpf, whatsapp,  email } = formData;
+            const sexo = selectedSexo;
             const uf = selectedUf;
             const city = selectedCity;
             const [latitude, longitude] = selectedPosition;
@@ -169,11 +196,11 @@ const CreatePersonal = () => {
 
             await api.post('personal', data);
 
-            alert("Pesonal cadastrado com sucesso!");
+            toast('Perfil criado com sucesso!', toastOptions);
 
             history.push('/');
         } catch (error) {
-            console.log(error);
+            console.log(error, toastOptions);
         }
     }
 
@@ -221,7 +248,7 @@ const CreatePersonal = () => {
 
                         <div className="field">
                         <label htmlFor="sexo">Sexo</label>
-                            <select name="sexo" id="uf">
+                            <select name="sexo" id="uf" value={selectedSexo} onChange={handleSelectedSexo} >
                                 <option value="0"></option>
                                 <option value="1">Feminino</option>
                                 <option value="2">Masculino</option>

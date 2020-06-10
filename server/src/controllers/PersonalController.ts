@@ -12,12 +12,12 @@ class PersonalController {
             .map(item => Number(item.trim()));
 
             const personal = await knex('personal')
-                .join('personal_items', 'personal.id', '=', 'personal_items.id')
-                .whereIn('personal_items.item_id', itemsId)
-                .where('cidade', String(cidade))
-                .where('uf', String(uf))
-                .distinct()
-                .select('personal.*');
+                // .join('personal_items', 'personal_items.id', '=', 'personal.id')
+                // .where('personal.id', itemsId)
+                // .where('cidade', String(cidade))
+                // .where('uf', String(uf))
+                // .distinct()
+                // .select('personal.*');
 
             const serializedPersonal = personal.map(personal => {
                 return {
