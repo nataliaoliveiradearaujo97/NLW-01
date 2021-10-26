@@ -1,6 +1,6 @@
-NLW-01 - BODY BUILDER
+## NLW-01 - BODY BUILDER 🏋️‍♀️
 
-Aplicação utilizando a mesma linguagem em todos os lados do desenvolvimento.
+Aplicação utilizando a linguagem JavaScript em todos os lados do desenvolvimento.
 
 Descrição: o projeto tem a intenção de ajudar usuários a localizarem profissionais de educação física.
 
