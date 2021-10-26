@@ -11,7 +11,7 @@ API de mapeamento do LeafFlet - (parecido com o google maps)
 Tecnologias: 
 back: nodeJS 
 front: reactJS 
-obile: reactNative 
+mobile: reactNative 
 banco: SQLite3
 
 Executar: 
