@@ -20,3 +20,5 @@ banco: SQLite3
 server (back): yarn dev 
 web (front): npm start 
 my-app (mobile): expo/yarn start
+
+
